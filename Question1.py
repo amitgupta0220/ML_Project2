@@ -4,12 +4,13 @@ from data import data_set
 
 
 class SoftmaxRegression:
-    def __init__(self, learning_rate=0.0001, num_iterations=1000, num_classes=3):
+    def __init__(self, learning_rate=0.1, num_iterations=5000, num_classes=3):
         self.learning_rate = learning_rate
         self.num_iterations = num_iterations
         self.num_classes = num_classes
         self.classes = None
         self.weights = None
+        b = np.zeros((1, 3))
 
     def fit(self, X, y):
         self.classes = np.unique(y)
@@ -41,7 +42,6 @@ class SoftmaxRegression:
             error = prob - y
             gradient = X.T.dot(error) / num_samples
             weights -= self.learning_rate * gradient
-
         return weights
 
     def _one_hot_encoding(self, y):
@@ -69,7 +69,7 @@ class SoftmaxRegression:
 
 def evaluate_classifier(classifier, X, y):
     y_pred = classifier.predict(X)
-    accuracy = np.mean(y_pred == y)
+    accuracy = np.mean(y_pred != y)
     return accuracy
 
 
@@ -83,7 +83,7 @@ y = data[:, -1]
 
 # Split the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.3)
+    X, y, test_size=0.3, random_state=42)
 
 # Convert string type data to numerical type data
 y_train = np.array([0 if label == 'Plastic' else 1 if label ==

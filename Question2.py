@@ -4,7 +4,7 @@ from data import data_set
 
 
 class SoftmaxRegression:
-    def __init__(self, lr=0.1, epochs=100):
+    def __init__(self, lr=0.001, epochs=10000):
         self.lr = lr
         self.epochs = epochs
 
@@ -38,7 +38,7 @@ class AdaBoost:
         weights = np.full(n_samples, 1 / n_samples)
 
         for i in range(self.n_estimators):
-            estimator = SoftmaxRegression(lr=0.1, epochs=100)
+            estimator = SoftmaxRegression(lr=0.1, epochs=5000)
             estimator.fit(X, y, sample_weight=weights)
             y_pred = estimator.predict(X)
             error = np.sum(weights * (y_pred != y))
@@ -71,10 +71,10 @@ y = np.array([class_mapping[label] for label in y])
 
 # train-test split
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42)
+    X, y, test_size=0.3, random_state=42)
 
 # Evaluate error rates for single classifier
-clf = SoftmaxRegression(lr=0.01, epochs=100)
+clf = SoftmaxRegression(lr=0.001, epochs=5000)
 clf.fit(X_train, y_train)
 y_pred = clf.predict(X_test)
 error_single = np.mean(y_pred != y_test)
