@@ -1,85 +1,65 @@
-import random
-from data import trim_data
+import numpy as np
+from collections import Counter
+from data import data_set
 
-# Define the number of clusters
-K_values = [3, 6, 9]
+# Define the dataset
+data = np.array(data_set)
 
-# Define the maximum number of iterations
-max_iterations = 100
+# Extract the numerical data (first 4 columns)
+X = data[:, :4].astype(float)
 
-# Define a function to compute the Euclidean distance between two points
-
-
-def euclidean_distance(point1, point2):
-    distance = 0.0
-    for i in range(len(point1)-1):
-        distance += (point1[i] - point2[i])**2
-    return distance
-
-# Define a function to assign each data point to the closest centroid
+'''
+X (numpy array): the data to be clustered, with shape (n_samples, n_features)
+k (integer): the number of clusters to form
+max_iterations (integer, optional): the maximum number of iterations to perform. Default is 100.
+Returns: a tuple containing the cluster labels for each data point in X and the final centroids of the clusters. The labels have shape (n_samples,) and the centroids have shape (k, n_features).
+'''
 
 
-def assign_to_cluster(data, centroids):
-    clusters = {}
-    for point in data:
-        distances = [euclidean_distance(point, centroid)
-                     for centroid in centroids]
-        closest_centroid_index = distances.index(min(distances))
-        if closest_centroid_index not in clusters:
-            clusters[closest_centroid_index] = []
-        clusters[closest_centroid_index].append(point)
-    return clusters
+def k_means_clustering(X, k, max_iterations=100):
+    # Initialize centroids randomly
+    centroids = X[np.random.choice(X.shape[0], k, replace=False)]
 
-# Define a function to update the centroids
+    for _ in range(max_iterations):
+        # Compute the distance between each point and the centroids
+        distances = np.linalg.norm(X[:, None] - centroids, axis=2)
 
+        # Assign each point to the closest centroid
+        labels = np.argmin(distances, axis=1)
 
-def update_centroids(clusters):
-    centroids = []
-    for cluster in clusters.values():
-        centroid = []
-        for i in range(len(cluster[0])-1):
-            centroid.append(sum([point[i]
-                            for point in cluster]) / len(cluster))
-        centroids.append(centroid)
-    return centroids
+        # Update the centroids as the mean of the points assigned to each cluster
+        for i in range(k):
+            centroids[i] = np.mean(X[labels == i], axis=0)
 
-# Define a function to perform K-means clustering
+    return labels, centroids
 
 
-def kmeans(data, K, max_iterations):
-    # Initialize K centroids randomly
-    centroids = random.sample(data, K)
+# Define the true labels
+# (numpy array): the true labels for each data point in the dataset. This is used to evaluate the accuracy of the clustering.
+true_labels = data[:, -1]
+# Compute the accuracy for each value of k
+'''
+for each value of k in [3, 6, 9], the code clusters the data using K-Means and evaluates the accuracy of the clustering. The output includes the cluster accuracies and the overall accuracy for each value of k.
+'''
+for k in [3, 6, 9]:
+    # Cluster the data using K-Means
+    labels, centroids = k_means_clustering(X, k)
 
-    # Repeat the assignment and update steps for a fixed number of iterations
-    for i in range(max_iterations):
-        clusters = assign_to_cluster(data, centroids)
-        centroids = update_centroids(clusters)
-
-    # Compute the accuracy and overall accuracy
+    # Compute the accuracy for each cluster
     cluster_accuracies = []
-    overall_accuracy = 0.0
-    for i in range(K):
-        cluster = clusters.get(i, [])
-        if len(cluster) == 0:
-            continue
-        label_counts = {}
-        for point in cluster:
-            label = point[-1]
-            label_counts[label] = label_counts.get(label, 0) + 1
-        max_count = max(label_counts.values())
-        correct_count = label_counts.get(
-            max(label_counts, key=label_counts.get), 0)
-        accuracy = correct_count / len(cluster)
-        cluster_accuracies.append(accuracy)
-        overall_accuracy += accuracy * len(cluster) / len(data)
-    return cluster_accuracies, overall_accuracy
+    for i in range(k):
+        # Get the labels for the data points in the cluster
+        cluster_labels = true_labels[labels == i]
+        # Compute the most common label in the cluster
+        most_common_label = Counter(cluster_labels).most_common(1)[0][0]
 
+        # Compute the accuracy for the cluster
+        cluster_accuracy = sum(
+            cluster_labels == most_common_label) / len(cluster_labels)
+        cluster_accuracies.append(cluster_accuracy)
 
-# Compute the accuracy and overall accuracy for K=3, 6, and 9
-for K in K_values:
-    print(f"K={K}")
-    cluster_accuracies, overall_accuracy = kmeans(trim_data, K, max_iterations)
-    for i, accuracy in enumerate(cluster_accuracies):
-        print(f"Cluster {i+1} accuracy: {accuracy:.2f}")
-    print(f"Overall accuracy: {overall_accuracy:.2f}")
-    print()
+    # Compute the overall accuracy as the weighted sum of the accuracies
+    overall_accuracy = np.average(cluster_accuracies, weights=[
+                                  sum(labels == i) for i in range(k)])
+
+    print(f"K={k}: Cluster accuracies = {cluster_accuracies}\nOverall accuracy = {overall_accuracy}")
