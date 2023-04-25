@@ -1,10 +1,3 @@
-'''
-From the results, we can see that the accuracy of the single classifier is 66.67%. The accuracy of the ensemble classifiers is higher than the single classifier, with the ensemble classifier with 100 models achieving the highest accuracy of 80.00%. The accuracy of the ensemble classifier improves as the number of models increases. This is because bagging reduces the variance of the model by averaging the predictions of multiple models, resulting in a more stable and accurate ensemble classifier.
-'''
-'''
-The accuracy of the single classifier and the ensemble classifiers with 10, 50, and 100 classifiers are all the same, which suggests that using bagging did not improve the classification accuracy for this specific dataset and classifier. This could be due to a variety of reasons, such as the dataset being too small or the classifier already performing at its maximum potential. Additionally, it is important to note that bagging may not always improve classification accuracy and should be used with caution and careful evaluation.
-'''
-
 data_set = [[0.17020707787494, 0.15, 0.49972782534513,
             1.9937239478858, "Plastic"],
             [0.13069872711354, 0.14134544193659, 0.75, 2.3108048761799, "Ceramic"],

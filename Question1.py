@@ -35,10 +35,12 @@ test_X_norm = (test_X - mean_X) / std_X
 # Define the softmax function
 
 '''
+Input:
 X: a numpy array of shape (num_examples, num_features), representing the input data to the neural network.
 W: a numpy array of shape (num_features, num_classes), representing the weights of the neural network.
 b: a numpy array of shape (1, num_classes), representing the bias terms of the neural network.
 
+Output:
 probs : The output of the function is a numpy array of shape (m, k), where m is the number of examples in the input X and k is the number of classes. Each element in the array represents the probability of the corresponding example belonging to the corresponding class.
 '''
 
@@ -65,12 +67,12 @@ def cross_entropy_loss(y_onehot, probs):
 
 
 '''
+Input:
 X: the input features (a matrix of shape [N, D] where N is the number of samples and D is the number of features)
 y_onehot: the one-hot encoded labels (a matrix of shape [N, K] where K is the number of classes)
 probs: the predicted probabilities (a matrix of shape [N, K] where K is the number of classes)
 
-The outputs are:
-
+Output:
 grad_W: the gradient of the cross-entropy loss with respect to the weights W (a matrix of shape [D, K])
 grad_b: the gradient of the cross-entropy loss with respect to the bias term b (a vector of shape [K])
 '''
@@ -89,6 +91,7 @@ def gradient(X, y_onehot, probs):
 
 
 '''
+Input:
 Trains a softmax regression model given the input features and one-hot encoded output variable. The model is trained using gradient descent and cross-entropy loss.
 X: numpy array containing the input features of the training set.
 y_onehot: numpy array containing the one-hot encoded output variable of the training set.
@@ -96,8 +99,7 @@ num_classes: integer representing the number of classes in the output variable.
 learning_rate: float representing the learning rate used in gradient descent.
 num_epochs: integer representing the number of epochs (i.e. passes through the training set) used in training the model.
 
-The function returns:
-
+Output:
 W: numpy array containing the learned weights of the model.
 b: numpy array containing the learned biases of the model.
 '''
@@ -129,12 +131,14 @@ def train_softmax(X, y_onehot, num_classes=3, learning_rate=0.1, num_epochs=100)
 
 
 '''
+Input:
 train_X: a numpy array containing the feature vectors of the training data
 train_y_onehot: a numpy array containing the one-hot encoded labels of the training data
 test_X: a numpy array containing the feature vectors of the test data
 test_y_onehot: a numpy array containing the one-hot encoded labels of the test data
 iterations: an integer indicating the number of iterations of bagging to perform
 
+Output:
 error_rate : returns the error rate of the combined predictions, which is calculated by computing the proportion of incorrect predictions in the combined predictions.
 '''
 

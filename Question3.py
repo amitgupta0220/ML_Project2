@@ -9,9 +9,11 @@ data = np.array(data_set)
 X = data[:, :4].astype(float)
 
 '''
+Input:
 X (numpy array): the data to be clustered, with shape (n_samples, n_features)
 k (integer): the number of clusters to form
 max_iterations (integer, optional): the maximum number of iterations to perform. Default is 100.
+
 Returns: a tuple containing the cluster labels for each data point in X and the final centroids of the clusters. The labels have shape (n_samples,) and the centroids have shape (k, n_features).
 '''
 
@@ -39,7 +41,10 @@ def k_means_clustering(X, k, max_iterations=100):
 true_labels = data[:, -1]
 # Compute the accuracy for each value of k
 '''
-for each value of k in [3, 6, 9], the code clusters the data using K-Means and evaluates the accuracy of the clustering. The output includes the cluster accuracies and the overall accuracy for each value of k.
+Input:
+for each value of k in [3, 6, 9], the code clusters the data using K-Means and evaluates the accuracy of the clustering. 
+
+The output includes the cluster accuracies and the overall accuracy for each value of k.
 '''
 for k in [3, 6, 9]:
     # Cluster the data using K-Means

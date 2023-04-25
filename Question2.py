@@ -2,10 +2,33 @@ import matplotlib.pyplot as plt
 import numpy as np
 from data import data_set
 
+'''
+Input:
+z : an array of shape (m, n) where m is the number of samples and n is the number of classes.
+
+Output:
+
+exp / np.sum(exp, axis=1, keepdims=True) : a matrix of shape (m, n) representing the softmax activations for each sample and class.
+'''
+
 
 def softmax(z):
     exp = np.exp(z - np.max(z, axis=1, keepdims=True))
     return exp / np.sum(exp, axis=1, keepdims=True)
+
+
+'''
+Input:
+X: a matrix of shape (m, n) where m is the number of samples and n is the number of features.
+y: a matrix of shape (m, n_classes) representing the one-hot-encoded target labels for each sample.
+n_classes: an integer representing the number of classes in the target variable.
+learning_rate: a float representing the learning rate for gradient descent optimization (default = 0.1).
+epochs: an integer representing the number of iterations for which to run the gradient descent algorithm (default = 1000).
+
+Output:
+weights: a matrix of shape (n, n_classes) representing the learned weight parameters of the Softmax Regression model.
+bias: a matrix of shape (1, n_classes) representing the learned bias parameters of the Softmax Regression model
+'''
 
 
 def SoftmaxRegression(X, y, n_classes, learning_rate=0.1, epochs=1000):
@@ -23,9 +46,30 @@ def SoftmaxRegression(X, y, n_classes, learning_rate=0.1, epochs=1000):
     return weights, bias
 
 
+'''
+Input:
+X: a matrix of shape (m, n) where m is the number of samples and n is the number of features.
+weights: a matrix of shape (n, n_classes) representing the learned weight parameters of the Softmax Regression model.
+bias: a matrix of shape (1, n_classes) representing the learned bias parameters of the Softmax Regression model.
+
+Output :
+np.argmax(softmax(z), axis=1): an array of shape (m, ) representing the predicted class labels for each input sample.
+'''
+
+
 def predict(X, weights, bias):
     z = np.dot(X, weights) + bias
     return np.argmax(softmax(z), axis=1)
+
+
+'''
+Input:
+labels: an array of shape (m, ) representing the target labels for each sample.
+
+Output:
+
+labels_encoded: a matrix of shape (m, n) representing the one-hot-encoded labels for each sample, where n is the number of unique labels in labels.
+'''
 
 
 def one_hot_encoding(labels):
